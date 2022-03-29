@@ -13,12 +13,15 @@ public class Hangman {
         play = new Scanner(System.in);
         // array with elements that can be randomized for the guessed word
         List<String> hangmanWord = List.of("bean", "hat", "gift", "heroic", "spontaneous", "windshield", "Boolean");
-        Hangman hangman = new Hangman();
+        Hangman hangman;
         do {
+            hangman = new Hangman();
             String s = hangmanWord.get(ThreadLocalRandom.current().nextInt(0, hangmanWord.size()));
             do {
+                hangman.draw(s);
                 hangman.logic(s);
             } while (hangman.isRunning(s));
+            hangman.draw(s);
             hangman.gameOver();
         }while(hangman.playAgain());
         System.exit(0);
@@ -97,6 +100,37 @@ public class Hangman {
             System.out.println("");
             return false;
         }
+    }
+    public void draw(String secretWord) {
+        //it's going to call all the draw related functions
+        drawHangMan();
+        drawSecretWord(secretWord);
+//        drawPiecesOfSecretWord();
+        drawAlreadyGuessed();
+    }
+    public void drawHangMan() {
+        //to draw the hangman
+        System.out.println("      ____");
+        System.out.println("     |    |");
+        System.out.printf("     |    %s%n", (incorrect.length() > 0) ? "0": "");
+        System.out.printf("     |   %s%s%s%n",(incorrect.length() > 1) ? "/": " ", (incorrect.length() > 2) ? "|": " ", (incorrect.length() > 3) ? "\\": "");
+        System.out.printf("     |   %s %s%n",(incorrect.length() > 4) ? "/": " ", (incorrect.length() > 5) ? "\\": "");
+        System.out.println(" ____|____");
+    }
+    public void drawSecretWord(String secretWord) {
+        //to start the secret word
+        String hidden = secretWord.replaceAll("[^ "+correct.toLowerCase() + correct.toUpperCase()+"]", "_");
+        System.out.println(hidden);
+        System.out.println("Secret Word");
+    }
+//    public void drawPiecesOfSecretWord() {
+//        //to put the pieces in place
+//    }
+    public void drawAlreadyGuessed() {
+        //to show the incorrect guesses and already drawn words.
+        System.out.println("Guessed characters:");
+        String guessedLetters = String.join(" ", incorrect.split(""));
+        System.out.println(guessedLetters);
     }
 
 }
